@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="../build/react.js"></script>
+    <script src="../build/react-dom.js"></script>
+    <script src="../build/browser.min.js"></script>
+</head>
+<style type="text/css">
+    .tab-title-wrap {width:300px;overflow:hidden;}
+    .tab-title-wrap div {width:100px;float:left;}
+    .tab_title {background:#fc0;text-align: center;height:30px;line-height: 30px;}
+    .tab_title.active {background:#0fc;}
+    .tab-item-wrap {background:#eef;width:300px;height:300px;}
+    .tab-item-wrap div {background:#efe;}
+    .tab-item-wrap div.show {display:block;}
+    .tab-item-wrap .tab_item {display:none;text-align:center;line-height: 300px;}
+</style>
+<body>
+    <div id="tabbox"></div>
+    <script type="text/babel">
+        var TabControl = React.createClass({
+            getInitialState : function(){
+                return {currentIndex : 0}
+            },
+            handleClick : function(index){
+                this.setState({currentIndex : index});
+            },
+            check_title_index : function(index){
+                return index === this.state.currentIndex ? "tab_title active" : "tab_title";
+            },
+            check_item_index : function(index){
+                return index === this.state.currentIndex ? "tab_item show" : "tab_item";
+            },
+            render : function(){
+                var _this = this;
+                return (
+                <div>
+                    <div className="tab-title-wrap">
+                        {
+                            React.Children.map(this.props.children, function(elem,index){
+                                return (
+                                    <div onClick={_this.handleClick.bind(_this,index)} className={_this.check_title_index(index)}>{elem.props.name}</div>
+                                );
+                            })
+                        }
+                    </div>
+                    <div className="tab-item-wrap">
+                        {
+                            React.Children.map(this.props.children, function(elem,index){
+                                return (
+                                    <div className={_this.check_item_index(index)}>{elem}</div>
+                                )
+                            })
+                        }
+                    </div>
+                </div>
+                )
+            }
+        });
+        var TabComponent = React.createClass({
+            render : function(){
+                return (
+                    <div class="container">
+                        <TabControl>
+                            <div name="first">第一帧aaaa</div>
+                            <div name="second">第二帧bbbb</div>
+                            <div name="third">第三帧cccc</div>
+                        </TabControl>
+                    </div>
+                )
+            }
+        });
+        ReactDOM.render(<TabComponent/>,document.getElementById('tabbox'));
+    </script>
+</body>
+</html>
